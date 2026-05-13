@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
-from google import genai
+from groq import Groq
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def summarize(topic: str, content: str) -> str:
     prompt = f"""
@@ -19,15 +19,17 @@ def summarize(topic: str, content: str) -> str:
     Sé conciso y directo.
     """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",  # gratis y muy capaz
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
-    return response.text
+    return response.choices[0].message.content
 
 if __name__ == "__main__":
     resultado = summarize(
         topic="OpenAI lanza nuevo modelo",
-        content="OpenAI anunció hoy GPT-5, con mejoras significativas en razonamiento lógico y capacidad multimodal."
+        content="OpenAI anunció GPT-5 con mejoras en razonamiento lógico y capacidad multimodal."
     )
     print(resultado)
