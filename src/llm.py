@@ -33,3 +33,31 @@ if __name__ == "__main__":
         content="OpenAI anunció GPT-5 con mejoras en razonamiento lógico y capacidad multimodal."
     )
     print(resultado)
+    
+def score_relevance(topic: str, summary: str) -> dict:
+    """
+    Le pide al LLM que evalúe la relevancia del resumen.
+    Devuelve un dict con score (1-10) y justificación.
+    """
+    prompt = f"""
+    Evaluá la relevancia de este resumen para el tema solicitado.
+    
+    Tema solicitado: {topic}
+    Resumen obtenido: {summary}
+    
+    Respondé ÚNICAMENTE con este JSON, sin texto adicional, sin backticks:
+    {{
+        "score": <número del 1 al 10>,
+        "reason": "<una oración explicando el score>",
+        "is_useful": <true si score >= 7, false si no>
+    }}
+    """
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    import json
+    raw = response.choices[0].message.content.strip()
+    return json.loads(raw)

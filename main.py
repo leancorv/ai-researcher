@@ -1,19 +1,14 @@
-from src.search import search, format_for_llm
-from src.llm import summarize
-
-def research(topic: str):
-    print(f"\n🔍 Buscando: {topic}")
-    results = search(topic)
-    
-    print(f"✅ {len(results)} fuentes encontradas")
-    content = format_for_llm(results)
-    
-    print("🤖 Analizando con Gemini...\n")
-    summary = summarize(topic, content)
-    
-    print("=" * 50)
-    print(summary)
-    print("=" * 50)
+from src import agent
 
 if __name__ == "__main__":
-    research("Coderhouse expansión latinoamérica 2025")
+    topics = [
+        "Coderhouse expansión latinoamérica 2025",
+        "tendencias inteligencia artificial empresas 2025",
+    ]
+
+    for topic in topics:
+        result = agent.run(topic)
+        print(f"\n📋 RESULTADO FINAL: {result['status'].upper()}")
+        if result.get("summary"):
+            print(f"\n{result['summary']}")
+        print("\n" + "=" * 50)
