@@ -21,7 +21,6 @@ Trigger (HTTP / Cloud Scheduler)
          ↓
    Google Sheets API   → save results
 ```
-# aca poner la imagen de docs 
 ![diagrama](docs/agent_flow_diagram.svg)
 The agent uses a **self-evaluation loop**: after generating a summary, it calls the LLM a second time to score its own relevance (1–10). If the score is too low, it retries with a refined query. This pattern is known as *self-reflection* in agentic AI systems.
 
