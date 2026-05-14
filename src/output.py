@@ -1,4 +1,5 @@
 import os
+import json
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
@@ -12,13 +13,16 @@ SCOPES = [
 ]
 
 def get_sheet():
-    creds = Credentials.from_service_account_file(
-        "google-credentials.json",
+    creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+    creds_dict = json.loads(creds_json)
+    creds = Credentials.from_service_account_info(
+        creds_dict,
         scopes=SCOPES
     )
     client = gspread.authorize(creds)
     sheet = client.open_by_key(os.getenv("GOOGLE_SHEET_ID"))
     return sheet.sheet1
+
 
 def save_result(result: dict):
     """
